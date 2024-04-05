@@ -96,3 +96,4 @@ binding = "AI"
 # [[vectorize]]
 # binding = "MY_INDEX"
 # index_name = "my-index"
+
