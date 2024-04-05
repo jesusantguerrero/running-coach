@@ -37,11 +37,15 @@ export default {
 				 },
 				 {
 					role: 'assistant',
-					content: 'The plan should increase weekly mileage by 10% until the race day, 4 times a week, incorporate speed work, tempo runs and heels'
+					content: 'The plan should increase weekly mileage by 10% until the race day, 4 times a week, incorporate speed work, tempo runs and heels.'
+				 },
+				 {
+					role: 'assistant',
+					content: 'Please omit intro and start your response with "Week 1:"'
 				 },
 				 {
 					role:'user',
-					content: `Give me a well structured ${weeks}-week training plan to run ${distance} km under ${minutes} minutes`
+					content: `Give me a well structured ${weeks}-week training plan to run ${distance} km under ${minutes} minutes, please omit intro and start your response on week 1`
 				 }
 			]
 		})
