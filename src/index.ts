@@ -1,14 +1,6 @@
-/**
- * Welcome to Cloudflare Workers! This is your first worker.
- *
- * - Run `npm run dev` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `npm run deploy` to publish your worker
- *
- * Learn more at https://developers.cloudflare.com/workers/
- */
-
+import { Ai } from "@cloudflare/ai";
 export interface Env {
+	AI: any
 	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
 	// MY_KV_NAMESPACE: KVNamespace;
 	//
@@ -27,6 +19,33 @@ export interface Env {
 
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-		return new Response('Hello World!');
+		const ai = new Ai(env.AI)
+		const { searchParams } = new URL(request.url);
+		const distance = `${searchParams.get('distance') ?? ''}`;
+		const minutes = `${searchParams.get('minutes') ?? ''}`;
+		const weeks = `${searchParams.get('weeks') ?? 4}`;
+
+		if (!distance || !minutes) {
+			return new Response("Should set a distance and minutes")
+		}
+
+		const response = await ai.run('@cf/meta/llama-2-7b-chat-int8', {
+			messages: [
+				 {
+					role: 'system',
+					content: 'As an expert running coach, capable of structuring great running plans'
+				 },
+				 {
+					role: 'assistant',
+					content: 'The plan should increase weekly mileage by 10% until the race day, 4 times a week, incorporate speed work, tempo runs and heels'
+				 },
+				 {
+					role:'user',
+					content: `Give me a well structured ${weeks}-week training plan to run ${distance} km under ${minutes} minutes`
+				 }
+			]
+		})
+
+		return new Response(JSON.stringify(response));
 	},
 };
