@@ -24,7 +24,7 @@ export default {
 					},
 					{
 						role: 'assistant',
-						content: 'Please omit intro and start your response with "Week 1:"'
+						content: 'Please be direct and to the point omit intro and start your response with "Week 1:" and also omit the notes'
 					},
 					{
 						role:'user',

@@ -1,9 +1,14 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+import PlanViewer from '../components/PlanViewer.vue'
+
+defineProps<{
+	results: Record<string,string>
+	processing: boolean;
+}>()
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <PlanViewer :results="results" :processing="processing" />
   </main>
 </template>

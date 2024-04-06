@@ -1,6 +1,34 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+
+const distance = ref<number|null>(null);
+const results = ref({
+	response: ''
+});
+const planConfig = ref();
+
+const fetchPlans = async(config: any) => {
+	const response = await fetch(`/api/plans?distance=${distance.value}&minutes=30`)
+	.then(res => res)
+	.then(res => res.json())
+
+	return response;
+}
+
+const isLoading = ref(false);
+const onSubmit = (config: any) => {
+	isLoading.value = true;
+	fetchPlans(config)
+		.then((res) => {
+			results.value = res;
+		})
+		.finally(() => {
+			isLoading.value = false;
+		})
+
+}
 </script>
 
 <template>
@@ -8,7 +36,12 @@ import HelloWorld from './components/HelloWorld.vue'
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+      <HelloWorld
+				msg="NeatCoach"
+				v-model:distance="distance"
+				v-model:selected="planConfig"
+				@submit="onSubmit"
+			/>
 
       <nav>
         <RouterLink to="/">Home</RouterLink>
@@ -17,7 +50,7 @@ import HelloWorld from './components/HelloWorld.vue'
     </div>
   </header>
 
-  <RouterView />
+  <RouterView :results="results" :config-date="planConfig" :processing="isLoading" />
 </template>
 
 <style scoped>
