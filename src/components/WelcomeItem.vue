@@ -1,8 +1,23 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+
+const props = withDefaults(defineProps<{
+	title: string;
+	cardClass: string
+}>(), {
+	cardClass: 'bg-gray-600 text-white'
+})
+
+const initials = computed(() => {
+	return props.title?.at(0)
+})
+</script>
+
 <template>
-  <div class="item">
-    <i>
-      <slot name="icon"></slot>
-    </i>
+  <div class="item ">
+    <div class="rounded-md w-16 flex items-center justify-center text-xl font-bold"  :class="cardClass">
+			{{  initials  }}
+    </div>
     <div class="details">
       <h3>
         <slot name="heading"></slot>
@@ -22,16 +37,6 @@
 .details {
   flex: 1;
   margin-left: 1rem;
-}
-
-i {
-  display: flex;
-  place-items: center;
-  place-content: center;
-  width: 32px;
-  height: 32px;
-
-  color: var(--color-text);
 }
 
 h3 {

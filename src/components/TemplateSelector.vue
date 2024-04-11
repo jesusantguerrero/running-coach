@@ -131,8 +131,9 @@ const templates = computed(() => {
 </script>
 
 <template>
-  <section class="greetings">
-	<section class="flex space-x-2 px-4">
+  <section class="px-4">
+	<h4 class="font-bold text-xl mb-2"> Workout Templates</h4>
+	<section class="flex space-x-2">
 		<span v-for="(distanceTemplate, distanceName) in distances"
 			class="cursor-pointer bg-green-100 px-4 text-green-400 rounded-md border-2 border-green-400"
 			@click="$emit('update:distance', distanceName)"
@@ -146,7 +147,7 @@ const templates = computed(() => {
 			All
 		</span>
 	</section>
-	<section class="mt-4 px-4 grid grid-cols-4 gap-2">
+	<section class="mt-4 grid md:grid-cols-4 grid-cols-2 gap-2 mb-20">
 		<section
 			v-for="(template, templateName) in templates"
 			class="cursor-pointer rounded-md border border-gray-800 p-5"

@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { computed, ref } from "vue";
+import { AtButton } from "atmosphere-ui";
+
 import WelcomeItem from './WelcomeItem.vue'
 import DocumentationIcon from './icons/IconDocumentation.vue'
-import { computed, ref } from "vue";
+import PlanNote from "@/components/PlanNote.vue"
 
 
 const props = defineProps<{
@@ -11,13 +14,12 @@ const props = defineProps<{
 
 
 const getType = (instructions: string) => {
+	if (instructions.toLowerCase().includes('note')) {
+		return 'note'
+	}
 
 	if (instructions.includes('rest')) {
 		return 'rest'
-	}
-
-	if (instructions.includes('note')) {
-		return 'note'
 	}
 
 	return 'workout';
@@ -43,21 +45,28 @@ const selected = ref(0);
 <template>
 	<section>
 		<main v-if="planSteps.length && !processing">
-			<section class="flex bg-slate-800 rounded-md text-white">
-				<section v-for="(week, index) in planSteps" class="p-4 cursor-pointer" :class="{'bg-slate-700': index == selected}" @click="selected=index">
-					<header>
-						{{ week.title }}
-					</header>
+			<header class="flex bg-slate-800 rounded-md text-white justify-between">
+				<section class="flex">
+					<div v-for="(week, index) in planSteps" class="p-4 cursor-pointer" :class="{'bg-slate-700': index == selected}" @click="selected=index">
+							{{ week.title }}
+					</div>
 				</section>
-			</section>
+				<section>
+					<AtButton @click="$emit('save')">Save</AtButton>
+					<AtButton @click="$emit('back')">Back</AtButton>
+				</section>
+			</header>
 			<section class="pl-6 mt-4">
-				<WelcomeItem v-for="plan in planSteps[selected].lines">
-					<template #icon>
-						<DocumentationIcon />
-					</template>
-					<template #heading>{{ plan.day }}</template>
-					{{ plan.description }}
-				</WelcomeItem>
+				<template v-for="plan in planSteps[selected].lines">
+					<WelcomeItem v-if="plan.type !== 'note'" :title="plan.day" >
+						<template #icon>
+							<DocumentationIcon />
+						</template>
+						<template #heading>{{ plan.day }} {{ plan.type}}</template>
+						{{ plan.description }}
+					</WelcomeItem>
+					<PlanNote :plan="plan" v-else />
+				</template>
 			</section>
 		</main>
 		<p v-if="processing" class="text-center pt-8">Building your plan...Please wait</p>
