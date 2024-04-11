@@ -43,7 +43,7 @@ watch(() => props.distance, (value) => {
 </script>
 
 <template>
-  <section class="px-4 py-4 rounded-lg bg-slate-700">
+  <section class="px-4 py-4 rounded-lg bg-base-lvl-3">
 		<p>Please provide some info to build your plan</p>
 		<form action="" class="grid grid-cols-3 gap-2" @submit.prevent id="plan-form">
 			<AtField label="Distance">

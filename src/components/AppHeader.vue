@@ -3,7 +3,7 @@ import { config } from '@/config';
 </script>
 
 <template>
-   <div class="relative z-50 flex justify-between px-5 py-3 text-white bg-gray-700 items-center">
+   <div class="relative z-50 flex justify-between px-5 py-3 text-white bg-base items-center border-b border-base-lvl-2">
         <div class="flex items-center space-x-2">
             <h1 class="text-2xl font-bold text-primary">
 				<router-link to="/">
@@ -14,7 +14,7 @@ import { config } from '@/config';
         <div class="relative flex mr-24 space-x-2">
 
         </div>
-        <router-link to="/saved-plans" class="overflow-hidden bg-gray-700  rounded-md cursor-pointer right-5">
+        <router-link to="/saved-plans" class="overflow-hidden bg-base-lvl-2  rounded-md cursor-pointer right-5">
            My Plans
         </router-link>
     </div>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue"
+import TemplateItem from "./TemplateItem.vue"
 
 const props = defineProps<{
 	distance: number|null
@@ -30,29 +31,15 @@ const distances: DistanceTemplates = {
 			advanced: [23, 29],
 			elite: [18, 22]
 		},
-		templates: [{
-			weeks: 8,
-			level: 'beginner'
-		},
-		{
-			weeks: 8,
-			crossTraining: true,
-			level: 'beginner'
-		},
+		templates: [
 		{
 			weeks: 4,
 			level: 'beginner',
 			minutes: 25
 		},
 		{
-			weeks: 8,
-			level: 'intermediate',
-			minutes: 24
-		},
-		{
-			weeks: 8,
-			crossTraining: true,
-			level: 'intermediate',
+			weeks: 4,
+			level: 'beginner',
 			minutes: 23
 		},
 		{
@@ -80,11 +67,6 @@ const distances: DistanceTemplates = {
 			weeks: 4,
 			level: 'beginner',
 			minutes: 60
-		},
-		{
-			weeks: 4,
-			level: 'intermediate',
-			minutes: 50
 		},
 		{
 			weeks: 4,
@@ -132,32 +114,30 @@ const templates = computed(() => {
 
 <template>
   <section class="px-4">
-	<h4 class="font-bold text-xl mb-2"> Workout Templates</h4>
+	<h4 class="font-bold text-xl mb-2 text-body-1"> Workout Templates</h4>
 	<section class="flex space-x-2">
 		<span v-for="(distanceTemplate, distanceName) in distances"
-			class="cursor-pointer bg-green-100 px-4 text-green-400 rounded-md border-2 border-green-400"
+			class="cursor-pointer  px-4 text-green-400 rounded-md border-2 py-1.5 border-green-400"
+			:class="[ distanceName == distance ? 'bg-base-lvl-3 font-bold' : 'bg-green-100/10']"
 			@click="$emit('update:distance', distanceName)"
 		>
 			{{ distanceName}} KM
 		</span>
 		<span
-		class="cursor-pointer bg-green-100 px-4 text-green-400 rounded-md border-2 border-green-400"
+		class="cursor-pointer bg-green-100/20 px-4 text-green-400 rounded-md border-2 py-1.5 border-green-400"
 		@click="$emit('update:distance', null)"
 		>
 			All
 		</span>
 	</section>
 	<section class="mt-4 grid md:grid-cols-4 grid-cols-2 gap-2 mb-20">
-		<section
-			v-for="(template, templateName) in templates"
-			class="cursor-pointer rounded-md border border-gray-800 p-5"
-			@click="$emit('submit', template)"
-		>
-			{{ template.distance || distance }}km {{ template.weeks }} week-plan for {{  template.level }}
-			<span v-if="template.minutes">
-				{{ template.minutes}} min
-			</span>
-		</section>
+		<TemplateItem
+			v-for="(plan, planDistance) in templates"
+			class="cursor-pointer rounded-md border border-gray-800 bg-base-lvl-3 text-body-1 overflow-hidden"
+			:plan="plan"
+			:distance="plan.distance || distance || planDistance"
+			@click="$emit('submit', plan)"
+		/>
 	</section>
   </section>
 </template>

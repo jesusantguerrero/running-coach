@@ -31,8 +31,8 @@ const planSteps = computed(() => {
 		return {
 			title: `Week ${index+1}`,
 			lines: week.split('\n').filter(value => value).map(line => ({
-				day: line.slice(0, line.indexOf(':')),
-				description: line.slice(line.indexOf(':') + 1),
+				day: line.slice(0, line.indexOf(',')),
+				description: line.slice(line.indexOf(',') + 1),
 				type: getType(line)
 			}))
 		}
