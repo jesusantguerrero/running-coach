@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import PlanViewer from '../components/PlanViewer.vue'
+import AppHeader from '@/components/AppHeader.vue'
+import PlanViewer from '@/components/PlanViewer.vue'
 
 defineProps<{
 	results: Record<string,string>
@@ -9,6 +10,7 @@ defineProps<{
 
 <template>
   <main>
+		<AppHeader />
     <PlanViewer :results="results" :processing="processing" />
   </main>
 </template>
