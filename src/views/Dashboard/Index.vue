@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { ref } from "vue";
 import { usePlanStorage } from "@/libs/usePlanStorage"
 
 import CurrentPlanWidget from "./Partials/CurrentPlanWidget.vue";
@@ -26,6 +26,7 @@ const fetchPlans = async(config: any) => {
 
 const isLoading = ref(false);
 const onSubmit = (config: any) => {
+	if (isLoading.value) return;
 	isLoading.value = true;
 	fetchPlans(config)
 		.then((res) => {
@@ -43,7 +44,7 @@ const onBack = () => {
 	results.value = { response: '' };
 }
 
-const { save, list } = usePlanStorage();
+const { save } = usePlanStorage();
 const onSave = async () => {
 	const name = await prompt("Whats the name for this plan?")
 	save({
@@ -54,27 +55,18 @@ const onSave = async () => {
 
 	results.value.response = "";
 }
-
-const saved = ref();
-onMounted(() => {
-	saved.value = list();
-})
-
-const current = computed(() => {
-	return saved.value?.find?.((item: any) => item.current);
-});
-
 </script>
 
 <template>
   <main>
 		<AppHeader />
-		<section v-if="!isLoading && !results.response" class="flex mx-auto mt-8 max-w-7xl">
+		<section v-if="!results.response" class="flex mx-auto mt-8 max-w-7xl">
 			<article class="w-8/12">
 				<section class="px-5 text-white">
 					<PlanForm
 						v-model:distance="distance"
 						@submit="onSubmit"
+						:processing="isLoading"
 					/>
 				</section>
 				<div class="mt-4">
@@ -82,7 +74,7 @@ const current = computed(() => {
 						v-model:distance="distance"
 						v-model:selected="planConfig"
 						@submit="onSubmit"
-						v-if="!isLoading"
+						:class="{'opacity-10': isLoading }"
 					/>
 				</div>
 			</article>
@@ -91,7 +83,7 @@ const current = computed(() => {
 			</aside>
 		</section>
 		<PlanViewer
-			v-if="isLoading || results.response"
+			v-if="results.response"
 			:results="results"
 			:config-date="planConfig"
 			:processing="isLoading" class="px-4 mx-auto mt-4 max-w-7xl"

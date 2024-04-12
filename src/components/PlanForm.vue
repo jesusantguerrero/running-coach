@@ -3,9 +3,13 @@
 import { AtField, AtInput, AtButton } from "atmosphere-ui";
 import { reactive, watch } from "vue";
 
+import IAutoFix from "./icons/IAutoFix.vue";
+import ILoadingPoints from "./icons/ILoadingPoints.vue";
+
 const props = defineProps<{
 	distance: number|null
 	selected?: Record<string, any>
+	processing?: boolean;
 }>()
 
 const emit = defineEmits(['update:distance', 'submit'])
@@ -44,19 +48,27 @@ watch(() => props.distance, (value) => {
 
 <template>
   <section class="px-4 py-4 rounded-lg bg-base-lvl-3">
-		<p>Please provide some info to build your plan</p>
-		<form action="" class="grid grid-cols-3 gap-2" @submit.prevent id="plan-form">
+		<h2 class="flex items-center mb-4">
+			<span class="flex items-center justify-center w-8 h-8 mr-2 rounded-full bg-base-lvl-1">
+				<IAutoFix class="text-success" />
+			</span>
+			<p>Provide some info to build your plan with <span class="italic">AI</span></p>
+		</h2>
+		<form action="" class="grid grid-cols-3 gap-2" @submit.prevent id="plan-form" v-if="!processing">
 			<AtField label="Distance">
-				<AtInput v-model="form.distance" />
+				<AtInput v-model="form.distance" class="text-white rounded-md bg-white/5"/>
 			</AtField>
 			<AtField label="Weeks">
-				<AtInput v-model="form.weeks" />
+				<AtInput v-model="form.weeks"  class="text-white rounded-md bg-white/5"/>
 			</AtField>
 			<AtField label="Time (in minutes)">
-				<AtInput v-model="form.minutes" />
+				<AtInput v-model="form.minutes"  class="text-white rounded-md bg-white/5" />
 			</AtField>
 		</form>
-		<AtButton class="bg-green-500 w-full" rounded @click="onSubmit"> Generate Plan </AtButton>
+		<AtButton class="flex items-center justify-center w-full bg-green-500 disabled:text-white"  :disabled="processing"  rounded @click="onSubmit">
+			Generate Plan
+			<ILoadingPoints v-if="processing" />
+		</AtButton>
   </section>
 </template>
 
