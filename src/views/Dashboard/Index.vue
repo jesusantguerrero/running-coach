@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from "vue";
 import { usePlanStorage } from "@/libs/usePlanStorage"
 
+import CurrentPlanWidget from "./Partials/CurrentPlanWidget.vue";
 import TemplateSelector from '@/components/TemplateSelector.vue'
 import PlanForm from '@/components/PlanForm.vue'
 import AppHeader from "@/components/AppHeader.vue";
@@ -86,13 +87,7 @@ const current = computed(() => {
 				</div>
 			</article>
 			<aside class="w-4/12">
-				<article class="px-4 py-3 rounded-md bg-base-lvl-3">
-					<h2 class="text-body-1">Current Plan</h2>
-					<section v-if="current" class="mt-4 cursor-pointer">
-						<h4 class="text-body"> {{  current.title }} </h4>
-
-					</section>
-				</article>
+				<CurrentPlanWidget />
 			</aside>
 		</section>
 		<PlanViewer
