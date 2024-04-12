@@ -2,14 +2,15 @@
 import { computed, ref } from "vue";
 import { AtButton } from "atmosphere-ui";
 
-import WelcomeItem from './WelcomeItem.vue'
+import PlanActivity from './PlanActivity.vue'
 import DocumentationIcon from './icons/IconDocumentation.vue'
 import PlanNote from "@/components/PlanNote.vue"
 
 
 const props = defineProps<{
-	results: Record<string,string>
-	processing: boolean
+	results: Record<string,string>;
+	processing: boolean;
+	hideSave?: boolean;
 }>();
 
 
@@ -45,30 +46,30 @@ const selected = ref(0);
 <template>
 	<section>
 		<main v-if="planSteps.length && !processing">
-			<header class="flex bg-slate-800 rounded-md text-white justify-between">
+			<header class="flex justify-between text-white rounded-md bg-slate-800">
 				<section class="flex">
 					<div v-for="(week, index) in planSteps" class="p-4 cursor-pointer" :class="{'bg-slate-700': index == selected}" @click="selected=index">
 							{{ week.title }}
 					</div>
 				</section>
 				<section>
-					<AtButton @click="$emit('save')">Save</AtButton>
-					<AtButton @click="$emit('back')">Back</AtButton>
+					<AtButton @click="$emit('save')" class="h-full transition-all ease-in hover:bg-primary" v-if="!hideSave">Save</AtButton>
+					<AtButton @click="$emit('back')" class="h-full transition-all ease-in hover:bg-base-lvl-3">Back</AtButton>
 				</section>
 			</header>
-			<section class="pl-6 mt-4">
+			<section class="mt-4">
 				<template v-for="plan in planSteps[selected].lines">
-					<WelcomeItem v-if="plan.type !== 'note'" :title="plan.day" >
+					<PlanActivity v-if="plan.type !== 'note'" :title="plan.day" >
 						<template #icon>
 							<DocumentationIcon />
 						</template>
 						<template #heading>{{ plan.day }} {{ plan.type}}</template>
 						{{ plan.description }}
-					</WelcomeItem>
+					</PlanActivity>
 					<PlanNote :plan="plan" v-else />
 				</template>
 			</section>
 		</main>
-		<p v-if="processing" class="text-center pt-8">Building your plan...Please wait</p>
+		<p v-if="processing" class="pt-8 text-center">Building your plan...Please wait</p>
 	</section>
 </template>

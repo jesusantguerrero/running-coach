@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 import AppHeader from "@/components/AppHeader.vue";
 import PlanViewer from "@/components/PlanViewer.vue";
 import { usePlanStorage } from "@/libs/usePlanStorage";
+import TemplateItem from "@/components/TemplateItem.vue";
 
 const distance = ref<number|null>(null);
 const results = ref({ response: ""});
@@ -34,26 +35,34 @@ const savedPlans = ref<any[]>([]);
 onMounted(() => {
 	savedPlans.value = list();
 })
+
+const reset = () => {
+	results.value = {
+		response: ''
+	};
+}
 </script>
 
 <template>
   <main>
 		<AppHeader />
-		<section v-if="!results.response">
-			<div class="mt-4">
-				<div v-for="plan in savedPlans">
-					{{ plan.title }} {{  plan }}
+		<TransitionGroup name="slide">
+			<section v-if="!results.response" class="mx-auto max-w-7xl">
+				<div class="mt-4 space-y-4">
+					<TemplateItem v-for="plan in savedPlans" :plan="plan" @click="results = plan">
+						{{ plan.title }} {{  plan }}
+					</TemplateItem>
 				</div>
-			</div>
-		</section>
-		<PlanViewer
-			v-if="isLoading || results.response"
-			:results="results"
-			:config-date="planConfig"
-			:processing="isLoading" class="px-4 mt-4"
-			@save="onSave"
-			@back="onBack"
-		/>
+			</section>
+			<PlanViewer
+				v-if="isLoading || results.response"
+				:results="results"
+				:config-date="planConfig"
+				:processing="isLoading" class="px-4 mx-auto mt-4 max-w-7xl"
+				hide-save
+				@back="reset"
+			/>
+		</TransitionGroup>
 	</main>
 
 </template>

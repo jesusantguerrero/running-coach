@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import WelcomeItem from './WelcomeItem.vue'
+import PlanActivity from './PlanActivity.vue'
 import DocumentationIcon from './icons/IconDocumentation.vue'
 
 defineProps<{
@@ -9,11 +9,11 @@ defineProps<{
 </script>
 
 <template>
-	<WelcomeItem class="bg-yellow-300" card-class="bg-white text-yellow-500" :title="plan.day">
+	<PlanActivity class="bg-yellow-300" card-class="text-yellow-500 bg-white" details-class="text-base-deep-1" :title="plan.day">
 		<template #icon>
 			<i class="note"/>
 		</template>
 		<template #heading>{{ plan.day }}</template>
 		{{ plan.description }}
-	</WelcomeItem>
+	</PlanActivity>
 </template>

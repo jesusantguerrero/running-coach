@@ -39,16 +39,17 @@ const onSubmit = (config: any) => {
 }
 
 const onBack = () => {
-
+	results.value = { response: '' };
 }
 
 const { save } = usePlanStorage();
-const onSave = () => {
+const onSave = async () => {
+	const name = await prompt("Whats the name for this plan?")
 	save({
-			title: 'Plan 1',
-			description: 'Description',
-			...results.value
-	})
+		title: name,
+		description: 'Description',
+		...results.value
+	}, `Plan {n}`)
 
 	results.value.response = "";
 }
@@ -57,7 +58,7 @@ const onSave = () => {
 <template>
   <main>
 		<AppHeader />
-		<section v-if="!isLoading && !results.response">
+		<section v-if="!isLoading && !results.response" class="mx-auto max-w-7xl">
 			<section class="px-5 mt-4 text-white">
 				<PlanForm
 					v-model:distance="distance"
@@ -77,7 +78,7 @@ const onSave = () => {
 			v-if="isLoading || results.response"
 			:results="results"
 			:config-date="planConfig"
-			:processing="isLoading" class="px-4 mt-4"
+			:processing="isLoading" class="px-4 mx-auto mt-4 max-w-7xl"
 			@save="onSave"
 			@back="onBack"
 		/>
