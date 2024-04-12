@@ -15,31 +15,47 @@ export default {
 		const weeks = `${searchParams.get('weeks') ?? 4}`;
 		const timesAWeek = `${searchParams.get('times') ?? 4}`;
 		const isApi = pathname.startsWith('/api/');
+		const maxTokens = 1000;
 
 		if (isApi && distance && minutes) {
-			const response = await ai.run(models.llama, {
-				messages: [
-					{
-						role: 'system',
-						content: 'As an expert running coach, capable of structuring great running plans'
-					},
-					{
-						role: 'assistant',
-						content: `The plan should increase weekly kilometers by 10% until the race day, running ${timesAWeek} times a week, incorporate speed work, tempo runs, heels, easy runs and long runs. alternate speed work and tempo runs by weekly basis.`
-					},
-					{
-						role: 'assistant',
-						content: 'Please be direct and to the point omit intro and start your response with "Week 1:" and also omit the notes'
-					},
-					{
-						role:'user',
-						content: `Please structure a ${weeks}-week training plan to run ${distance}km under ${minutes} minutes. Each activity should mention which run time it is with the following format "Day of week {run-type}: instructions..." eg. "Monday (easy run): instructions..." instructions should be in the same line.`
-					}
-				],
-				max_tokens: 1000
-			})
+			const messages = [
+				{
+					role: 'system',
+					content: 'You are an expert running coach, capable of structuring great running plans for 5k, 10k and 21k'
+				},
+				// {
+				// 	role: 'assistant',
+				// 	content: `The generated plans should increase weekly kilometers gradually by 10% until the race day, incorporate speed work, tempo runs, heels, easy runs and long runs and race day. alternate speed work and tempo runs by weekly basis.`
+				// },
+				{
+					role:'user',
+					content: `Build a training plan to run ${distance}km in ${minutes} minutes by the end of the last week of the training plan. Taking the following considerations: the plan must be from Week 1 to Week ${weeks}; running sessions must not be more than ${timesAWeek} per week (This is important!); Each activity should mention which run time it is with the following format: "Day of week {run-type}, [instructions]..." eg. "Monday(easy run), run {N} km..."; The last day of the plan is the race day, so the given distance in the given minutes should be the activity for that day`
+				},
+				{
+					role: 'assistant',
+					content: 'Please be direct and to the point omit any introduction or notes and start your response with "Week 1:"'
+				},
+			]
 
-			return new Response(JSON.stringify(response));
+			try {
+				const response = await ai.run(models.llama, {
+					messages,
+					max_tokens: maxTokens
+				})
+
+				return new Response(JSON.stringify({
+					...response,
+					messages
+				}));
+			} catch (err) {
+				return new Response(JSON.stringify({
+					message: "server error",
+					text: err
+				}), {
+					headers: { 'content-type': 'application/json' },
+					status: 404
+				})
+			}
 		}
 
 		// Otherwise, serve the static assets.

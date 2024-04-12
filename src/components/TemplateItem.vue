@@ -7,6 +7,7 @@ const props = defineProps<{
 	plan: {
 		distance: number;
 		minutes: number;
+		title?: string;
 	},
 	distance: number;
 	imageOnly?: boolean
@@ -17,9 +18,6 @@ const handleLoadError = () => {
   hasImageErrors.value = true;
 };
 
-const imageUrl = computed(() => {
-  return hasImageErrors.value ? null : props.plan.imageUrl;
-});
 
 const isHovered = ref(false);
 </script>
@@ -28,36 +26,38 @@ const isHovered = ref(false);
   <article
     @mouseover="isHovered = true"
     @mouseleave="isHovered = false"
-    class="group rounded-md overflow-hidden border shadow-md shadow-base-lvl-3 group relative"
+    class="relative overflow-hidden border rounded-md shadow-md group shadow-base-lvl-3"
   >
     <div
-      class="w-full text-gray-200 font-bold h-72 flex items-center justify-center bg-gradient-to-br from-base to-base-lvl-2 overflow-hidden relative cursor-pointer"
+      class="relative flex items-center justify-center w-full overflow-hidden font-bold text-gray-200 cursor-pointer h-72 bg-gradient-to-br from-base to-base-lvl-2"
     >
       <v-lazy-image
         v-if="!hasImageErrors"
         :src="Image"
         @error="handleLoadError"
         @onload="handledLoaded"
-        class="w-full h-full group-hover:scale-110 transform ease-in-out transition-transform object-cover object-top"
+        class="object-cover object-top w-full h-full transition-transform ease-in-out transform group-hover:scale-110"
         :alt="plan.title"
       />
-      <span v-else class="px-4"> {{ plan.title }} </span>
     </div>
     <section
-      class="w-full ease-linear group-hover:pb-20 cursor-pointer transition px-4 py-4 bg-gradient-to-b from-transparent via-base to-base-lvl-3 absolute text-white top-56"
+      class="absolute w-full px-4 py-4 text-white transition ease-linear cursor-pointer group-hover:pb-20 bg-gradient-to-b from-transparent via-base to-base-lvl-3 top-56"
       v-if="!imageOnly"
     >
-      <h4 class="font-bold w-full flex overflow-ellipsis">
-		{{ plan.weeks }} week-plan for
+      <h4 class="flex w-full font-bold overflow-ellipsis">
+				<span v-if="plan.title" class="px-4"> {{ plan.title }} </span>
+				<span v-else>
+					{{ plan.weeks }} week-plan for
+				</span>
       </h4>
       <footer class="flex justify-between text-gray-200">
         <p>
           <span class="italic"> Minutes: </span>
-          <span class="text-primary font-bold">
+          <span class="font-bold text-primary">
             {{ plan.minutes }}
           </span>
         </p>
-        <span class="capitalize text-gray-200">{{ distance }} KM</span>
+        <span class="text-gray-200 capitalize">{{ plan.distance ?? distance }} KM</span>
       </footer>
     </section>
   </article>

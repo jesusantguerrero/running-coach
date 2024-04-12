@@ -45,6 +45,7 @@ const selected = ref(0);
 
 <template>
 	<section>
+		<h4 v-if="results.title" class="mb-4 text-4xl font-bold text-body"> {{ results.title }}</h4>
 		<main v-if="planSteps.length && !processing">
 			<header class="flex justify-between text-white rounded-md bg-slate-800">
 				<section class="flex">
@@ -55,6 +56,7 @@ const selected = ref(0);
 				<section>
 					<AtButton @click="$emit('save')" class="h-full transition-all ease-in hover:bg-primary" v-if="!hideSave">Save</AtButton>
 					<AtButton @click="$emit('back')" class="h-full transition-all ease-in hover:bg-base-lvl-3">Back</AtButton>
+					<AtButton @click="$emit('remove')" class="h-full transition-all ease-in hover:bg-error" v-if="hideSave">Delete</AtButton>
 				</section>
 			</header>
 			<section class="mt-4">
@@ -63,7 +65,7 @@ const selected = ref(0);
 						<template #icon>
 							<DocumentationIcon />
 						</template>
-						<template #heading>{{ plan.day }} {{ plan.type}}</template>
+						<template #heading>{{ plan.day }}</template>
 						{{ plan.description }}
 					</PlanActivity>
 					<PlanNote :plan="plan" v-else />

@@ -5,35 +5,19 @@ import PlanViewer from "@/components/PlanViewer.vue";
 import { usePlanStorage } from "@/libs/usePlanStorage";
 import TemplateItem from "@/components/TemplateItem.vue";
 
-const distance = ref<number|null>(null);
 const results = ref({ response: ""});
 const planConfig = ref();
 
-const fetchPlans = async(config: any) => {
-	const response = await fetch(`/api/plans?distance=${distance.value || config.distance || 5}&minutes=${config.minutes ?? 30}&weeks=${config.weeks ?? 4}`)
-	.then(res => res)
-	.then(res => res.json())
-
-	return response;
-}
-
 const isLoading = ref(false);
-const onSubmit = (config: any) => {
-	isLoading.value = true;
-	fetchPlans(config)
-		.then((res) => {
-			results.value = res;
-		})
-		.finally(() => {
-			isLoading.value = false;
-		})
-}
 
-const { list } = usePlanStorage();
+const { list, remove } = usePlanStorage();
 const savedPlans = ref<any[]>([]);
+const fetchPlans = () => {
+	savedPlans.value = list();
+}
 
 onMounted(() => {
-	savedPlans.value = list();
+	fetchPlans();
 })
 
 const reset = () => {
@@ -41,26 +25,42 @@ const reset = () => {
 		response: ''
 	};
 }
+
+const onSelect = (plan: any, id: number) => {
+	results.value = {
+		...plan,
+		id
+	}
+}
+
+const onRemove = (plan: any) => {
+	remove(plan.id)
+	fetchPlans()
+	reset()
+}
 </script>
 
 <template>
   <main>
 		<AppHeader />
 		<TransitionGroup name="slide">
-			<section v-if="!results.response" class="mx-auto max-w-7xl">
-				<div class="mt-4 space-y-4">
-					<TemplateItem v-for="plan in savedPlans" :plan="plan" @click="results = plan">
-						{{ plan.title }} {{  plan }}
-					</TemplateItem>
+			<section v-if="!results.response" class="mx-auto mt-8 max-w-7xl">
+				<h4 class="mb-2 text-4xl font-bold text-body">Saved plans</h4>
+				<div class="grid grid-cols-1 gap-2 mt-4 md:grid-cols-2">
+					<TemplateItem
+						v-for="(plan, id) in savedPlans"
+						:plan="plan" @click="onSelect(plan, id)"
+					/>
 				</div>
 			</section>
 			<PlanViewer
 				v-if="isLoading || results.response"
 				:results="results"
 				:config-date="planConfig"
-				:processing="isLoading" class="px-4 mx-auto mt-4 max-w-7xl"
+				:processing="isLoading" class="px-4 mx-auto mt-8 max-w-7xl"
 				hide-save
 				@back="reset"
+				@remove="onRemove(results)"
 			/>
 		</TransitionGroup>
 	</main>
