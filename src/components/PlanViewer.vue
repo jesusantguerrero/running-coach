@@ -4,6 +4,8 @@ import { AtButton } from "atmosphere-ui";
 
 import PlanActivity from './PlanActivity.vue'
 import DocumentationIcon from './icons/IconDocumentation.vue'
+import IStarCheck from './icons/IStarCheck.vue'
+import IStarOutline from './icons/IStarOutline.vue'
 import PlanNote from "@/components/PlanNote.vue"
 
 
@@ -45,7 +47,13 @@ const selected = ref(0);
 
 <template>
 	<section>
-		<h4 v-if="results.title" class="mb-4 text-4xl font-bold text-body"> {{ results.title }}</h4>
+		<header v-if="results.title" class="flex items-center">
+			<h4  class="mb-4 text-4xl font-bold text-body"> {{ results.title }}</h4>
+			<button @click="$emit('mark', results)" class="items-center h-full my-auto ml-2 ">
+				<IStarOutline v-if="!results.current" class="text-4xl text-gray-500" />
+				<IStarCheck v-else class="text-4xl text-yellow-400" />
+			</button>
+		</header>
 		<main v-if="planSteps.length && !processing">
 			<header class="flex justify-between text-white rounded-md bg-slate-800">
 				<section class="flex">

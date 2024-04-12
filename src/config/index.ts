@@ -1,3 +1,6 @@
 export const config  = {
-	appName: 'NeatCoach'
+	appName: 'NeatCoach',
+	sports: [{
+		running: {}
+	}]
 }

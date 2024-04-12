@@ -24,7 +24,7 @@ export const usePlanStorage = () => {
 		]))
 	}
 
-	const update = (toUpdateIndex: number, newPlan) => {
+	const update = (toUpdateIndex: number, newPlan: any) => {
 		const plans = list();
 		plans[toUpdateIndex] = {
 			...newPlan,
@@ -37,10 +37,23 @@ export const usePlanStorage = () => {
 		]))
 	}
 
+	const markAsCurrent = (toUpdateIndex: number) => {
+		const plans = list();
+		const newPlans = plans.map((plan, index) => ({
+			...plan,
+			current: index == toUpdateIndex ? !plan.current : false
+		}));
+
+		window.localStorage.setItem('plans', JSON.stringify([
+			...newPlans,
+		]))
+	}
+
 	return {
 		save,
 		list,
 		remove,
-		update
+		update,
+		markAsCurrent
 	}
 }

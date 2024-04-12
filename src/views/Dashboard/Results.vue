@@ -10,7 +10,7 @@ const planConfig = ref();
 
 const isLoading = ref(false);
 
-const { list, remove } = usePlanStorage();
+const { list, remove, markAsCurrent } = usePlanStorage();
 const savedPlans = ref<any[]>([]);
 const fetchPlans = () => {
 	savedPlans.value = list();
@@ -38,6 +38,13 @@ const onRemove = (plan: any) => {
 	fetchPlans()
 	reset()
 }
+
+const onMark = () => {
+	const isCurrent = !results.value?.current;
+	results.value.current = isCurrent;
+	savedPlans.value[results.value.id].current = isCurrent;
+	markAsCurrent(results.value.id)
+}
 </script>
 
 <template>
@@ -61,6 +68,7 @@ const onRemove = (plan: any) => {
 				hide-save
 				@back="reset"
 				@remove="onRemove(results)"
+				@mark="onMark"
 			/>
 		</TransitionGroup>
 	</main>

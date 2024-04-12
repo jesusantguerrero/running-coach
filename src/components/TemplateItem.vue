@@ -45,10 +45,11 @@ const isHovered = ref(false);
       v-if="!imageOnly"
     >
       <h4 class="flex w-full font-bold overflow-ellipsis">
-				<span v-if="plan.title" class="px-4"> {{ plan.title }} </span>
+				<span v-if="plan.title" class="font-bold"> {{ plan.title }}</span>
 				<span v-else>
-					{{ plan.weeks }} week-plan for
+					{{ plan.weeks }} week-plan
 				</span>
+				<span v-if="plan.current" class="px-2 ml-2 border rounded-md bg-green-200/10 text-success border-success"> current</span>
       </h4>
       <footer class="flex justify-between text-gray-200">
         <p>
