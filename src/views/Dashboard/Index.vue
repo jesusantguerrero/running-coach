@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { usePlanStorage } from "@/libs/usePlanStorage"
 
 import TemplateSelector from '@/components/TemplateSelector.vue'
@@ -42,7 +42,7 @@ const onBack = () => {
 	results.value = { response: '' };
 }
 
-const { save } = usePlanStorage();
+const { save, list } = usePlanStorage();
 const onSave = async () => {
 	const name = await prompt("Whats the name for this plan?")
 	save({
@@ -53,26 +53,47 @@ const onSave = async () => {
 
 	results.value.response = "";
 }
+
+const saved = ref();
+onMounted(() => {
+	saved.value = list();
+})
+
+const current = computed(() => {
+	return saved.value?.find?.((item: any) => item.current);
+});
+
 </script>
 
 <template>
   <main>
 		<AppHeader />
-		<section v-if="!isLoading && !results.response" class="mx-auto max-w-7xl">
-			<section class="px-5 mt-4 text-white">
-				<PlanForm
-					v-model:distance="distance"
-					@submit="onSubmit"
-				/>
-			</section>
-			<div class="mt-4">
-				<TemplateSelector
-					v-model:distance="distance"
-					v-model:selected="planConfig"
-					@submit="onSubmit"
-					v-if="!isLoading"
-				/>
-			</div>
+		<section v-if="!isLoading && !results.response" class="flex mx-auto mt-8 max-w-7xl">
+			<article class="w-8/12">
+				<section class="px-5 text-white">
+					<PlanForm
+						v-model:distance="distance"
+						@submit="onSubmit"
+					/>
+				</section>
+				<div class="mt-4">
+					<TemplateSelector
+						v-model:distance="distance"
+						v-model:selected="planConfig"
+						@submit="onSubmit"
+						v-if="!isLoading"
+					/>
+				</div>
+			</article>
+			<aside class="w-4/12">
+				<article class="px-4 py-3 rounded-md bg-base-lvl-3">
+					<h2 class="text-body-1">Current Plan</h2>
+					<section v-if="current" class="mt-4 cursor-pointer">
+						<h4 class="text-body"> {{  current.title }} </h4>
+
+					</section>
+				</article>
+			</aside>
 		</section>
 		<PlanViewer
 			v-if="isLoading || results.response"

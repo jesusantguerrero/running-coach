@@ -10,7 +10,7 @@ const planConfig = ref();
 
 const isLoading = ref(false);
 
-const { list, remove, markAsCurrent } = usePlanStorage();
+const { list, remove, markAsCurrent, update } = usePlanStorage();
 const savedPlans = ref<any[]>([]);
 const fetchPlans = () => {
 	savedPlans.value = list();
@@ -45,6 +45,16 @@ const onMark = () => {
 	savedPlans.value[results.value.id].current = isCurrent;
 	markAsCurrent(results.value.id)
 }
+
+const onUpdate = (updatedPlan: any) => {
+	const updatedData = {
+		...results.value,
+		steps: updatedPlan,
+		id: results.value.id
+	};
+	savedPlans.value[results.value.id] = updatedData;
+	update(results.value.id, updatedData)
+}
 </script>
 
 <template>
@@ -67,8 +77,9 @@ const onMark = () => {
 				:processing="isLoading" class="px-4 mx-auto mt-8 max-w-7xl"
 				hide-save
 				@back="reset"
-				@remove="onRemove(results)"
 				@mark="onMark"
+				@update="onUpdate"
+				@remove="onRemove(results)"
 			/>
 		</TransitionGroup>
 	</main>

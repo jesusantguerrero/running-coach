@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { ref, watch } from "vue";
 import { AtButton } from "atmosphere-ui";
 
 import PlanActivity from './PlanActivity.vue'
-import DocumentationIcon from './icons/IconDocumentation.vue'
 import IStarCheck from './icons/IStarCheck.vue'
 import IStarOutline from './icons/IStarOutline.vue'
 import PlanNote from "@/components/PlanNote.vue"
+
+import { parsePlanResponse } from "@/libs"
+import { emit } from "process";
 
 
 const props = defineProps<{
@@ -15,32 +17,21 @@ const props = defineProps<{
 	hideSave?: boolean;
 }>();
 
+const emit = defineEmits(['update']);
 
-const getType = (instructions: string) => {
-	if (instructions.toLowerCase().includes('note')) {
-		return 'note'
-	}
+const planSteps = ref([]);
 
-	if (instructions.includes('rest')) {
-		return 'rest'
-	}
 
-	return 'workout';
-}
+watch(() => props.results, () => {
+	planSteps.value = !props.results.steps
+	? parsePlanResponse(props.results?.response)
+	: props.results?.steps
+}, { immediate: true })
 
-const planSteps = computed(() => {
-	const regexPattern = /Week\s\d:\n/;
-	return props.results?.response.split(regexPattern).filter(value => value).map((week, index) => {
-		return {
-			title: `Week ${index+1}`,
-			lines: week.split('\n').filter(value => value).map(line => ({
-				day: line.slice(0, line.indexOf(',')),
-				description: line.slice(line.indexOf(',') + 1),
-				type: getType(line)
-			}))
-		}
-	})
-})
+watch(() => planSteps.value, (steps) => {
+	emit('update', steps)
+}, { deep: true })
+
 
 const selected = ref(0);
 </script>
@@ -68,15 +59,19 @@ const selected = ref(0);
 				</section>
 			</header>
 			<section class="mt-4">
-				<template v-for="plan in planSteps[selected].lines">
-					<PlanActivity v-if="plan.type !== 'note'" :title="plan.day" >
-						<template #icon>
-							<DocumentationIcon />
-						</template>
-						<template #heading>{{ plan.day }}</template>
-						{{ plan.description }}
+				<template v-for="activity in planSteps[selected].lines">
+					<PlanActivity v-if="activity.type !== 'note'" :title="activity.day" >
+						<template #heading>{{ activity.day }}</template>
+						<section class="flex justify-between w-full">
+							<span>
+								{{ activity.description }}
+							</span>
+							<span v-if="activity.type == 'workout'">
+								<input type="checkbox" @click="activity.completed = !activity.completed" v-model="activity.completed" />
+							</span>
+						</section>
 					</PlanActivity>
-					<PlanNote :plan="plan" v-else />
+					<PlanNote :plan="activity" v-else />
 				</template>
 			</section>
 		</main>
