@@ -6,9 +6,9 @@ import { config } from '@/config';
    <header class="relative z-50 flex items-center text-white border-b bg-base border-base-lvl-2">
         <section class="flex items-center justify-between w-full px-5 py-3 mx-auto max-w-7xl">
 			<div class="flex items-center space-x-2">
-				<h1 class="text-2xl font-bold text-primary">
+				<h1 class="text-2xl font-bold text-white">
 					<router-link to="/">
-						{{ config.appName }}
+						<span class="font-bold text-primary">Neat</span>Coach
 					</router-link>
 				</h1>
 			</div>

@@ -25,7 +25,7 @@ const fetchPlans = async(config: any) => {
 }
 
 const isLoading = ref(false);
-const onSubmit = (config: any) => {
+const onSubmit = async (config: any) => {
 	if (isLoading.value) return;
 	isLoading.value = true;
 	fetchPlans(config)
@@ -38,6 +38,7 @@ const onSubmit = (config: any) => {
 		.finally(() => {
 			isLoading.value = false;
 		})
+
 }
 
 const onBack = () => {
@@ -60,16 +61,16 @@ const onSave = async () => {
 <template>
   <main>
 		<AppHeader />
-		<section v-if="!results.response" class="flex mx-auto mt-8 max-w-7xl">
+		<section v-if="!results.response" class="flex mx-auto mt-8 space-x-4 max-w-7xl">
 			<article class="w-8/12">
-				<section class="px-5 text-white">
+				<section class="text-white">
 					<PlanForm
 						v-model:distance="distance"
 						@submit="onSubmit"
 						:processing="isLoading"
 					/>
 				</section>
-				<div class="mt-4">
+				<div class="mt-8">
 					<TemplateSelector
 						v-model:distance="distance"
 						v-model:selected="planConfig"
@@ -79,7 +80,7 @@ const onSave = async () => {
 				</div>
 			</article>
 			<aside class="w-4/12">
-				<CurrentPlanWidget />
+				<CurrentPlanWidget :disabled="isLoading " />
 			</aside>
 		</section>
 		<PlanViewer

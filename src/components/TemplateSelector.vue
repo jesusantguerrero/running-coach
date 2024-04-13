@@ -113,8 +113,8 @@ const templates = computed(() => {
 </script>
 
 <template>
-  <section class="px-4">
-	<h4 class="font-bold text-xl mb-2 text-body-1"> Workout Templates</h4>
+  <section class="">
+	<h4 class="mb-2 text-xl font-bold text-body-1"> Workout Templates</h4>
 	<section class="flex space-x-2">
 		<span v-for="(distanceTemplate, distanceName) in distances"
 			class="cursor-pointer  px-4 text-green-400 rounded-md border-2 py-1.5 border-green-400"
@@ -130,10 +130,10 @@ const templates = computed(() => {
 			All
 		</span>
 	</section>
-	<section class="mt-4 grid md:grid-cols-4 grid-cols-2 gap-2 mb-20">
+	<section class="grid grid-cols-2 gap-2 mt-4 mb-20 md:grid-cols-4">
 		<TemplateItem
 			v-for="(plan, planDistance) in templates"
-			class="cursor-pointer rounded-md border border-gray-800 bg-base-lvl-3 text-body-1 overflow-hidden"
+			class="overflow-hidden border border-gray-800 rounded-md cursor-pointer bg-base-lvl-3 text-body-1"
 			:plan="plan"
 			:distance="plan.distance || distance || planDistance"
 			@click="$emit('submit', plan)"
