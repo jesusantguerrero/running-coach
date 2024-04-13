@@ -7,6 +7,7 @@ import TemplateSelector from '@/components/TemplateSelector.vue'
 import PlanForm from '@/components/PlanForm.vue'
 import AppHeader from "@/components/AppHeader.vue";
 import PlanViewer from "@/components/PlanViewer.vue";
+import { parsePlanResponse } from "@/libs";
 
 const distance = ref<number|null>(null);
 const results = ref({
@@ -51,7 +52,8 @@ const onSave = async () => {
 	save({
 		title: name,
 		description: 'Description',
-		...results.value
+		...results.value,
+		steps: parsePlanResponse(results.value.response)
 	}, `Plan {n}`)
 
 	results.value.response = "";
@@ -61,8 +63,8 @@ const onSave = async () => {
 <template>
   <main>
 		<AppHeader />
-		<section v-if="!results.response" class="flex mx-auto mt-8 space-x-4 max-w-7xl">
-			<article class="w-8/12">
+		<section v-if="!results.response" class="flex flex-col px-4 mt-8 md:space-x-4 md:mx-auto md:flex-row md:max-w-7xl">
+			<article class="w-full md:w-8/12">
 				<section class="text-white">
 					<PlanForm
 						v-model:distance="distance"
@@ -79,7 +81,7 @@ const onSave = async () => {
 					/>
 				</div>
 			</article>
-			<aside class="w-4/12">
+			<aside class="w-full mb-4 md:w-4/12">
 				<CurrentPlanWidget :disabled="isLoading " />
 			</aside>
 		</section>

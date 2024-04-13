@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { config } from '@/config';
+import IPlans from "@/components/icons/IPlans.vue";
+import IHome from "@/components/icons/IHome.vue";
 </script>
 
 <template>
@@ -15,12 +17,18 @@ import { config } from '@/config';
 			<div class="relative flex mr-24 space-x-2">
 
 			</div>
-			<section>
-				<router-link to="/" class="px-5 py-2 overflow-hidden cursor-pointer rounded-l-md bg-base-lvl-2">
-				   Home
+			<section class="flex">
+				<router-link to="/" class="flex items-center px-5 py-2 overflow-hidden cursor-pointer rounded-l-md bg-base-lvl-2">
+					<IHome />
+					<span class="hidden ml-2 md:inline-block">
+						Home
+					</span>
 				</router-link>
-				<router-link to="/saved-plans" class="px-5 py-2 overflow-hidden cursor-pointer rounded-r-md bg-base-lvl-2">
-				   My Plans
+				<router-link to="/saved-plans" class="flex items-center px-5 py-2 overflow-hidden cursor-pointer rounded-r-md bg-base-lvl-2">
+					<IPlans />
+					<span class="hidden ml-2 md:inline-block">
+						My Plans
+					</span>
 				</router-link>
 			</section>
 		</section>

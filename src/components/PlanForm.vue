@@ -81,7 +81,7 @@ watch(() => props.processing, (isLoading) => {
 			</span>
 			<p>Provide some info to build your plan with <span class="italic">AI</span></p>
 		</h2>
-		<form action="" class="grid grid-cols-3 gap-2" @submit.prevent id="plan-form" v-if="!processing">
+		<form action="" class="grid grid-cols-1 gap-0.5 md:gap-2 md:grid-cols-3" @submit.prevent id="plan-form" v-if="!processing">
 			<AtField label="Distance (KM)">
 				<BaseSelector
 					class="w-full h-10 px-2 text-white border rounded-md bg-white/5"

@@ -61,7 +61,7 @@ const onUpdate = (updatedPlan: any) => {
   <main>
 		<AppHeader />
 		<TransitionGroup name="slide">
-			<section v-if="!results.response" class="mx-auto mt-8 max-w-7xl">
+			<section v-if="!results.response" class="px-4 mx-auto mt-8 max-w-7xl">
 				<h4 class="mb-2 text-4xl font-bold text-body">Saved plans</h4>
 				<div class="grid grid-cols-1 gap-2 mt-4 md:grid-cols-2">
 					<TemplateItem
@@ -69,6 +69,9 @@ const onUpdate = (updatedPlan: any) => {
 						:plan="plan" @click="onSelect(plan, id)"
 					/>
 				</div>
+				<p v-if="!savedPlans.length">
+					No plans saved, generate new plans and save them to see them here
+				</p>
 			</section>
 			<PlanViewer
 				v-if="isLoading || results.response"
