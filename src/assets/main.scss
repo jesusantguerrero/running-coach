@@ -1,0 +1,69 @@
+@import './base.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.checkbox-done {
+    -webkit-appearance: none;
+    width: 1.1rem;
+    height: 1.1rem;
+    min-width: 1.1rem;
+    max-height: 1.1rem;
+    background: transparent;
+    border-radius: 2px;
+    display: block;
+    margin: 0 2px;
+    border: 2px solid #666;
+    position: relative;
+    cursor: pointer;
+    transition: all ease 0.3s;
+    display: inline-block;
+    padding-bottom: 15px;
+    &:focus {
+      outline: 0;
+    }
+
+    &:before {
+        content: "";
+        color: transparent;
+        left: 5%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 12px;
+    }
+
+    &:hover {
+        @apply bg-green-200;
+        @apply border-green-400;
+        @apply border-2;
+    }
+
+    &:checked {
+        @apply bg-green-500;
+        @apply border-green-400;
+        @apply border-2;
+
+        &:before {
+            color: white;
+            content: "\f00c";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+        }
+
+        &+[for*=""] {
+            text-decoration: line-through;
+        }
+    }
+
+}
+
+[for^="check"] {
+  display: inline-block;
+  width: 80%;
+  font-size: 18px;
+  z-index: 200;
+  cursor: text;
+  color: #777;
+  font-size: 20px;
+}

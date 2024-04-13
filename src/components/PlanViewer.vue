@@ -59,18 +59,16 @@ const selected = ref(0);
 				</section>
 			</header>
 			<section class="mt-4">
-				<template v-for="activity in planSteps[selected].lines">
-					<PlanActivity v-if="activity.type !== 'note'" :title="activity.day" >
-						<template #heading>{{ activity.day }}</template>
-						<section class="flex justify-between w-full">
-							<span>
-								{{ activity.description }}
-							</span>
-							<span v-if="activity.type == 'workout'">
-								<input type="checkbox" @click="activity.completed = !activity.completed" v-model="activity.completed" />
-							</span>
-						</section>
-					</PlanActivity>
+				<template v-for="(activity, activityIndex) in planSteps[selected].lines">
+					<PlanActivity
+						v-if="activity.type !== 'note'"
+						:title="activity.day"
+						:activity="activity"
+						:index="activityIndex"
+						class="cursor-pointer group hover:bg-base-lvl-2"  @click="activity.completed = !activity.completed"
+						:class="{'bg-success/20 hover:bg-success/50': activity.completed}"
+						:allow-check="results.title"
+					/>
 					<PlanNote :plan="activity" v-else />
 				</template>
 			</section>

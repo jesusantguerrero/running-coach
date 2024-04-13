@@ -1,4 +1,4 @@
-import './assets/main.css'
+import './assets/main.scss'
 import "atmosphere-ui/style.css";
 
 import { createApp } from 'vue'
