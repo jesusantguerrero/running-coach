@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import ResultsPage from '../views/Dashboard/Results.vue'
 import Dashboard from '@/views/Dashboard/Index.vue'
+import PlansPage from '@/views/Plans.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,6 +22,11 @@ const router = createRouter({
 			path: '/saved-plans',
 			name: 'SavedPlans',
 			component: ResultsPage
+		},
+		{
+			path: '/plans/:id',
+			name: 'plans',
+			component: PlansPage
 		},
     {
       path: '/about',
